@@ -14,7 +14,7 @@ router.use('/auth', registerRoute)
 router.use('/auth', logoutRoute)
 
 // Verify Session route for route restriction in client
-router.use('/', verifySeshRoute)
+router.use(verifySeshRoute)
 
 
 
