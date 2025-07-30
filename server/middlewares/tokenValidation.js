@@ -1,4 +1,4 @@
-const { loginCache, userDataCache } = require("../utils/tempCache");
+const { setLogin, delLogin, hasLogin } = require('../helpers/cacheHelpers/loginCache')
 
 
 /**
@@ -26,8 +26,8 @@ function readUser(token) {
  */
 function refreshToken(token, res) {
     const newExpiry = Date.now() + 24 * 60 * 60 * 1000;
-    loginCache.delete(token);
-    loginCache.set(token, newExpiry);
+    delLogin(token);
+    setLogin(token, newExpiry);
     res.cookie('userData', token, {
         httpOnly: true,
         secure: true,
@@ -56,7 +56,7 @@ async function tokenValidate(req, res, next) {
     if (userDataCookie && !tempUserDataCookie) {
         const token = userDataCookie
 
-        if (loginCache.has(token)) {
+        if (hasLogin(token)) {
             const expirationTime = loginCache.get(token)
             if (Date.now() < expirationTime) {
                 refreshToken(token, res)
@@ -68,7 +68,7 @@ async function tokenValidate(req, res, next) {
                     return res.status(401).json({ message: 'Unauthorized' });
                 }
             } else {
-                loginCache.delete(token)
+                delLogin(token)
                 return res.status(401).json({ message: 'Unauthorized' });
             }
         }
@@ -77,7 +77,7 @@ async function tokenValidate(req, res, next) {
     if (!userDataCookie && tempUserDataCookie) {
         const token = tempUserDataCookie
         try {
-            if (loginCache.has(token)) {
+            if (hasLogin(token)) {
                 const expirationTime = loginCache.get(token)
                 if ( Date.now() < expirationTime) {
                     refreshToken(token, res)
@@ -89,7 +89,7 @@ async function tokenValidate(req, res, next) {
                         return res.status(401).json({ message: 'Unauthorized' });
                     }
                 } else {
-                    loginCache.delete(token)
+                    delLogin(token)
                     return res.status(401).json({ message: 'Unauthorized' });
                 }
             }
