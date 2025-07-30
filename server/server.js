@@ -4,8 +4,6 @@ dotenv.config()
 const cors = require('cors')
 const cp = require('cookie-parser')
 const morgan = require('morgan')
-const fs = require('fs')
-const path = require('path')
 const tokenValidate = require('./middlewares/tokenValidation')
 const app = express()
  
