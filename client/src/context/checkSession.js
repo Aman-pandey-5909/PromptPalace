@@ -18,12 +18,15 @@ const CheckSession = ({ children }) => {
         }
         async function checkRoute() {
             console.log("session checked");
-            await checkRouteRestriction().then((res) => res.redirect ? router.push(res.redirect.destination) : null)
-            return 
+            const res = await checkRouteRestriction()
+            if (res.redirect) {
+                router.push(res.redirect.destination)
+            } else {
+                setLoading(false)
+            }
         }
         checkRoute()
-        setLoading(false)
-    }, [])
+    }, [pathname])
 
     return (
         <CheckSessionContext.Provider value={{ loading }}>

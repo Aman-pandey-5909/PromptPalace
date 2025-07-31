@@ -1,7 +1,7 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-
+import { ToastContainer, toast, Bounce } from "react-toastify"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -24,6 +24,7 @@ import {
 import Link from "next/link"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 const Login = () => {
   const form = useForm({
@@ -32,22 +33,63 @@ const Login = () => {
       password: "",
     },
   })
+  const [errorMessage, setErrorMessage] = useState()
   const router = useRouter()
   const onSubmit = async(data) => {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_LINK_AUTH}/login`, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true
-    })
-    console.log(data)
-    if (res.status === 200) {
-      router.push("/")
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_LINK_AUTH}/login`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true
+      })
+      console.log(data)
+      if (res.status === 200) {
+        toast("✅ Login succesfull", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        })
+        router.push("/")
+      }
+    } catch (error) {
+      console.log(error)
+      toast(`❌ ${error.response.data.message}`, {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      })
+      setErrorMessage(error.response.data.message)
     }
   }
 
   return (
     <Card className="w-full max-w-sm">
+    <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
@@ -100,6 +142,7 @@ const Login = () => {
                 </FormItem>
               )}
             />
+            {errorMessage && <p className="text-destructive">*{errorMessage}</p>}
           </CardContent>
 
           <CardFooter className="flex-col mt-2 gap-2">
