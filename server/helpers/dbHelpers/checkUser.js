@@ -9,12 +9,19 @@ const checkUser = async (email) => {
         // email = escapeMongoKey(email)
         const user = await User.findOne({ email })
         if (user) {
-            return true
+            return {
+                success: true,
+                data: user
+            }
         }
-        return false
+        return {
+            success: false
+        }
     } catch (error) {
         console.error("❌-Error checking user | dbHelpers", error);
-        return false
+        return {
+            success: false
+        }
     }
 }
 
