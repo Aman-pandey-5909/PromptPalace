@@ -3,11 +3,12 @@ const fs = require('fs')
 const path = require('path')
 const REGEXFORAUTH = require('../../utils/regexes')
 const getDataFromRequest = require('../../utils/getDataFromRequest')
-
+const checkUser = require('../../helpers/dbHelpers/checkUser')
+const createUser = require('../../helpers/dbHelpers/createUser')
 exports.register = async (req, res) => {
     try {
 
-        const data = getDataFromRequest(req, { withId: true, withTimestamp: true })
+        const data = getDataFromRequest(req, { withId: true })
         const { username, email, password, confirmPassword, id } = data
 
         if (!username || !email || !password || !confirmPassword) {
@@ -26,11 +27,9 @@ exports.register = async (req, res) => {
             return res.status(400).json({ message: 'Passwords do not match' })
         }
 
-        const user = fs.readFileSync(path.join(__dirname, '../../tempJSONDATA/User.json'), 'utf-8')
-        const users = JSON.parse(user)
+        const existingUser = await checkUser(email)
 
-        const existingUser = users.find(user => user.email === email)
-        if (existingUser) {
+        if (existingUser.success === true) {
             return res.status(400).json({ message: 'User already exists' })
         }
 
@@ -43,9 +42,7 @@ exports.register = async (req, res) => {
             password: hashedPassword
         }
 
-
-        const saveUser = fs.writeFileSync(path.join(__dirname, '../../tempJSONDATA/User.json'), JSON.stringify([...users, { ...newUserData }]), 'utf-8')
-
+        const saveUser = await createUser(newUserData)
 
         return res.status(200).json({ message: 'User registered successfully', data: saveUser })
 
