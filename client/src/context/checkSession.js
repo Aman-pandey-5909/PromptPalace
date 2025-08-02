@@ -12,20 +12,33 @@ const CheckSession = ({ children }) => {
     const pathname = usePathname()
     const excludedRoutes = ['/auth/login', '/auth/signup']
     useEffect(() => {
-        if (excludedRoutes.includes(pathname)) {
-            setLoading(false)
-            return
-        }
         async function checkRoute() {
-            console.log("session checked");
-            const res = await checkRouteRestriction()
-            if (res.redirect) {
-                router.push(res.redirect.destination)
+            // if (excludedRoutes.includes(pathname)) {
+            //     setLoading(false)
+            //     return
+            // }
+            console.log("check route function inside"); //reached
+            const res = await checkRouteRestriction() // reaches but gets stuck here after user is logged in and then reloads the page
+            console.log("res", res); // unreachable once logged in
+            if (!res) { // unreachable once logged in
+                console.log("session checked | false");
+                if(excludedRoutes.includes(pathname)) {
+                    setLoading(false)
+                    return
+                }
+                router.push('/auth/login')
+                return
             } else {
+                console.log("session checked | true");
+                if (excludedRoutes.includes(pathname)) {
+                    router.push('/')
+                }
                 setLoading(false)
+                return
             }
         }
-        checkRoute()
+        checkRoute() //reached
+        console.log("check route function end"); //reached
     }, [pathname])
 
     return (
@@ -36,7 +49,7 @@ const CheckSession = ({ children }) => {
                     <Skeleton className="h-4 w-[250px]" />
                     <Skeleton className="h-4 w-[200px]" />
                 </div>
-            </div> : children }
+            </div> : children}
         </CheckSessionContext.Provider>
     )
 }
