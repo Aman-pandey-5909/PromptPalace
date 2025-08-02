@@ -1,5 +1,6 @@
-const { setLogin, delLogin, hasLogin } = require('../helpers/cacheHelpers/loginCache')
-
+const { setLogin, delLogin, hasLogin, getLogin } = require('../helpers/cacheHelpers/loginCache')
+const { getUser, setUser } = require('../helpers/cacheHelpers/userCache')
+const jwt = require('jsonwebtoken')
 
 /**
  * Reads a user from the tempJSONDATA/User.json file by the given token
@@ -10,8 +11,8 @@ function readUser(token) {
     // const user = fs.readFileSync(path.join(__dirname, '../../tempJSONDATA/User.json'), 'utf-8')
     // const users = JSON.parse(user)
     // const existingUser = users.find(user => user.token === token)
-    const existingUser = userDataCache.get(token)
-    if (!existingUser) {
+    const existingUser = getUser(token)
+    if (!existingUser.data) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
     return existingUser
@@ -26,12 +27,11 @@ function readUser(token) {
  */
 function refreshToken(token, res) {
     const newExpiry = Date.now() + 24 * 60 * 60 * 1000;
-    delLogin(token);
     setLogin(token, newExpiry);
     res.cookie('userData', token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
         maxAge: 24 * 60 * 60 * 1000
     });
 }
@@ -54,18 +54,38 @@ async function tokenValidate(req, res, next) {
     }
 
     if (userDataCookie && !tempUserDataCookie) {
+        
         const token = userDataCookie
 
         if (hasLogin(token)) {
-            const expirationTime = loginCache.get(token)
-            if (Date.now() < expirationTime) {
+            // console.log("userDataCookie but no tempUserDataCookie in tokenValidate", userDataCookie);
+            const expirationTime = getLogin(token)
+            if (Date.now() < expirationTime.data) {
+                console.log("Inside If block in userData but no tempUserDataCookie in tokenValidate");
                 refreshToken(token, res)
                 const existingUser = readUser(token)
                 if (existingUser) {
                     req.user = existingUser
+                    res.cookie('tempUserData', token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === 'production',
+                        sameSite: 'lax',
+                        maxAge: 10 * 60 * 1000
+                    })
                     return next()
                 } else {
-                    return res.status(401).json({ message: 'Unauthorized' });
+                    const dataFromCookie = jwt.verify(token, process.env.JWT_SECRET)
+                    const { id, email, username } = dataFromCookie
+                    const user = { id, email, username }
+                    setUser(token, user)
+                    req.user = user
+                    res.cookie('tempUserData', token, {
+                        httpOnly: true,
+                        secure: process.env.NODE_ENV === 'production',
+                        sameSite: 'lax',
+                        maxAge: 10 * 60 * 1000
+                    })
+                    return next()
                 }
             } else {
                 delLogin(token)
@@ -78,15 +98,20 @@ async function tokenValidate(req, res, next) {
         const token = tempUserDataCookie
         try {
             if (hasLogin(token)) {
-                const expirationTime = loginCache.get(token)
-                if ( Date.now() < expirationTime) {
+                const expirationTime = getLogin(token)
+                if ( Date.now() < expirationTime.data) {
                     refreshToken(token, res)
                     const existingUser = readUser(token)
                     if (existingUser) {
                         req.user = existingUser
                         return next()
                     } else {
-                        return res.status(401).json({ message: 'Unauthorized' });
+                        const dataFromCookie = jwt.verify(token, process.env.JWT_SECRET)
+                        const { id, email, username } = dataFromCookie
+                        const user = { id, email, username }
+                        setUser(token, user)
+                        req.user = user
+                        return next()
                     }
                 } else {
                     delLogin(token)
@@ -94,9 +119,12 @@ async function tokenValidate(req, res, next) {
                 }
             }
         } catch (error) {
+            res.clearCookie('tempUserData')
             return res.status(401).json({ message: 'Unauthorized' });
         }
     }
+    // console.log("error came from tokenValidate?");
+    return res.status(200).json({ message: 'Authorized' }); // Ye nahi hone ke karan request yahi hang kar jaarha tha, no return no nothing causing the bug  of frontend restrcitedroutes not loading even after login, also return or next() a middleware, always use console logs for ease of debugging
 
 }
 
