@@ -1,4 +1,5 @@
 const User = require('../../models/User')
+const { setUser } = require('../cacheHelpers/userCache')
 // const {escapeMongoKeys} = require('../../utils/escapeKeys')
 const editUser = async(id, data) => {
     try {
@@ -10,6 +11,7 @@ const editUser = async(id, data) => {
         }
         // const newData = escapeMongoKeys(data)
         const user = await User.findOneAndUpdate({ id: id }, data, { new: true })
+        setUser(user.token, { id: user.id, email: user.email, username: user.username })
         console.log("✅ - User edited successfully | dbHelpers");
         return {
             success: true,
