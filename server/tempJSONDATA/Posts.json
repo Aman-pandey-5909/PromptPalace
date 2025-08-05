@@ -1,3 +1,42 @@
 [
-    
+  {
+    "id": "post_001",
+    "author": "John Doe",
+    "title": "How to Modularize a Cache Layer in Node.js",
+    "prompt": "Explain how and why to separate caching logic (like Map-based or Redis-based caching) into its own module or service in a Node.js backend application.",
+    "tags": ["nodejs", "backend", "caching", "architecture", "redis", "modular-code"],
+    "expectedResponse": "A well-structured cache system improves maintainability and allows easy swapping between in-memory and persistent solutions like Redis. Typically, you'd create a dedicated `cache/` directory, with separate files for each caching strategy and an index to unify them. This ensures minimal refactoring when upgrading the cache backend."
+  },
+  {
+    "id": "post_002",
+    "author": "Jane Smith",
+    "title": "JWT vs Session-Based Authentication",
+    "prompt": "Compare the pros and cons of JWT-based authentication versus traditional session-based authentication in web applications.",
+    "tags": ["auth", "jwt", "sessions", "security", "webdev", "nodejs"],
+    "expectedResponse": "JWTs are stateless, scalable, and ideal for distributed systems, but require secure storage and handling. Sessions are easier to implement securely but can add server memory overhead. JWTs are better for APIs; sessions are simpler for classic web apps."
+  },
+  {
+    "id": "post_003",
+    "author": "Bob Johnson",
+    "title": "What is Middleware in Express.js?",
+    "prompt": "Define middleware in Express.js and describe how it's used in routing, authentication, and error handling.",
+    "tags": ["express", "nodejs", "middleware", "webdev", "backend"],
+    "expectedResponse": "Middleware functions in Express.js have access to the request and response objects and the next function. They're used for tasks like logging, authentication checks, request parsing, and centralized error handling. They help keep route logic clean and modular."
+  },
+  {
+    "id": "post_004",
+    "author": "Alice Williams",
+    "title": "Design a Token Refresh Flow in a Backend API",
+    "prompt": "Describe how to implement a secure token refresh mechanism using JWTs in a Node.js backend application.",
+    "tags": ["auth", "jwt", "refresh-token", "backend", "security"],
+    "expectedResponse": "A refresh flow issues two tokens: an access token (short-lived) and a refresh token (long-lived). The client stores the refresh token securely (e.g., HTTP-only cookie). When the access token expires, a new one is issued using the refresh token, after validation."
+  },
+  {
+    "id": "post_005",
+    "author": "Mark Thompson",
+    "title": "Why Use Environment Variables in Backend Apps?",
+    "prompt": "Explain the role of environment variables in backend development and how to manage them using dotenv in Node.js.",
+    "tags": ["env", "dotenv", "nodejs", "security", "best-practices"],
+    "expectedResponse": "Environment variables keep sensitive config values (like DB URIs, API keys) out of your code. Using the dotenv package, you load variables from a `.env` file into `process.env`. This promotes security and makes apps portable across environments (dev, test, prod)."
+  }
 ]
