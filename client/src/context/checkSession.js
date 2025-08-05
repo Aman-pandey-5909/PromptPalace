@@ -10,7 +10,7 @@ const CheckSession = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const router = useRouter()
     const pathname = usePathname()
-    const excludedRoutes = ['/auth/login', '/auth/signup']
+    const excludedRoutes = ['/auth/login', '/auth/signup', '/']
     useEffect(() => {
         async function checkRoute() {
             // if (excludedRoutes.includes(pathname)) {
@@ -31,7 +31,7 @@ const CheckSession = ({ children }) => {
             } else {
                 console.log("session checked | true");
                 if (excludedRoutes.includes(pathname)) {
-                    router.push('/')
+                    router.push('/feed')
                 }
                 setLoading(false)
                 return
