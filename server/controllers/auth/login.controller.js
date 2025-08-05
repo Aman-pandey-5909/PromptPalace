@@ -48,7 +48,6 @@ exports.login = async (req, res) => {
         await editUser(existingUser.data.id, { token }) // update the user with the new token, adds token key and assigns the token value
 
         res.cookie('userData', token, { httpOnly: true, secure:process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }) // sets a userData cookie on the response whose maxAge is 24hrs, used as main cookie
-        res.cookie('tempUserData', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 10 * 60 * 1000 }) // sets a tempUserData cookie on the response whose maxAge is 10min, used as backup cookie
 
         console.log("LoginTokens: ", getAllLogin());
         console.log("UserTokens: ", getAllUser());
@@ -57,5 +56,6 @@ exports.login = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        return res.status(500).json({ message: 'Internal server error' , error: error.message})
     }
 }
