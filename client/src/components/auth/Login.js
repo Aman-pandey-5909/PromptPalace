@@ -43,7 +43,6 @@ const Login = () => {
         },
         withCredentials: true
       })
-      console.log(data)
       if (res.status === 200) {
         toast("✅ Login succesfull", {
           position: "top-right",
@@ -56,7 +55,7 @@ const Login = () => {
           theme: "light",
           transition: Bounce,
         })
-        router.push("/")
+        router.push("/feed")
       }
     } catch (error) {
       console.log(error)

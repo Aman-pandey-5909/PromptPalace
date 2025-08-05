@@ -1,5 +1,6 @@
 "use client"
 
+// implement toast and error feild for server recieved error later :) (just use toastify and a useState for error)
 import { useForm } from "react-hook-form"
 import { useState } from "react"
 import Link from "next/link"
