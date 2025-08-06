@@ -1,3 +1,5 @@
+// This is not needed Anymore -> keeping it for reference, will remove later as ./tokenvalidate.js is more maintainable and scalable and less messy than this middleware
+
 const { setLogin, delLogin, hasLogin, getLogin } = require('../helpers/cacheHelpers/loginCache')
 const { getUser, setUser } = require('../helpers/cacheHelpers/userCache')
 const jwt = require('jsonwebtoken')
