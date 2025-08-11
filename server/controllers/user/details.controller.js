@@ -3,7 +3,7 @@ const {getUser} = require('../../helpers/cacheHelpers/userCache')
 exports.details = async (req, res) => {
     try {
         const usercookietoken = req.cookies.userData
-        console.log(usercookietoken);
+        // console.log(usercookietoken);
         const user = getUser(usercookietoken)
         // console.log(user);
         return res.status(200).json({message: 'User details fetched', data: user.data})
