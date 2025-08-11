@@ -1,6 +1,6 @@
 // remake token validation, this time implement file saving and shii
 const jwt = require('jsonwebtoken')
-const _ = require('lodash')
+// const _ = require('lodash')
 const refreshToken = require('../helpers/middlewareHelpers/tokenValidationHelpers/refreshToken')
 const readUser = require('../helpers/middlewareHelpers/tokenValidationHelpers/readUser')
 
@@ -22,14 +22,14 @@ async function tokenvalidation (req, res, next) {
         }
         
         const decodedData = {
-            id: decoded.id,
+            _id: decoded._id,
             email: decoded.email,
             username: decoded.username
         }
-        console.log("User data:", user.data.data);
-        console.log("Decoded data:", decodedData);
-
-        if (!_.isEqual(user.data.data, decodedData)) {
+        // console.log("User data in tokenvalidate:", user.data.data);
+        // console.log("Decoded data in tokenvalidate:", decodedData);
+        console.log("User _id from userdata in tokenvalidate:", user.data.data._id.toString());
+        if (user.data.data.email !== decodedData.email || user.data.data.username !== decodedData.username || user.data.data._id.toString() !== decodedData._id) {
             throw new Error('❌ - User does not match token | Authorization Failed')
         }
         req.user = user.data.data
