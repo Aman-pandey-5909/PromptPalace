@@ -15,7 +15,7 @@ function refreshToken (res, token) {
         
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const decodedData = {
-            id: decoded.id,
+            _id: decoded._id,
             email: decoded.email,
             username: decoded.username
         }
@@ -36,7 +36,11 @@ function refreshToken (res, token) {
             }
         } else {
             const user = readUser(token)
-            if(!_.isEqual(user.data.data, decodedData)) {
+            if(
+                user.data.data.email !== decodedData.email ||
+                user.data.data.username !== decodedData.username ||
+                user.data.data._id.toString() !== decodedData._id
+            ) {
                 res.clearCookie('userData')
                 throw new Error('❌ - User does not match token | refreshToken')
             }

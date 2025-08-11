@@ -1,11 +1,17 @@
 const User = require('../../models/User')
 
-const readUser = async(id) => {
+const readUser = async(data) => {
     try {
-        if (!id) {
+        if (!data) {
             throw new Error('❌ -Please provide an id to readUser')
         }
-        const user = await User.findOne({ id: id })
+        const user = await User.findOne(data)
+        if (!user) {
+            return {
+                success: false,
+                error: "User not found"
+            }
+        }
         console.log("✅ - User read successfully | dbHelpers");
         return {
             success: true,

@@ -5,7 +5,7 @@ const deleteUser = async(id) => {
         if (!id) {
             throw new Error('❌ -Please provide an id to deleteUser')
         }
-        const user = await User.findOneAndDelete({ id: id })
+        const user = await User.findOneAndDelete({ _id: id })
         console.log("✅ - User deleted successfully | dbHelpers");
         return {
             success: true,

@@ -10,9 +10,9 @@ const editUser = async(id, data) => {
             throw new Error('❌ -Please provide data to editUser')
         }
         // const newData = escapeMongoKeys(data)
-        const user = await User.findOneAndUpdate({ id: id }, data, { new: true })
-        setUser(user.token, { id: user.id, email: user.email, username: user.username })
-        console.log("✅ - User edited successfully | dbHelpers");
+        const user = await User.findOneAndUpdate({ _id: id }, data, { new: true })
+        setUser(user.token, user)
+        console.log("✅ - User edited successfully | dbHelpers - editUser");
         return {
             success: true,
             data: user

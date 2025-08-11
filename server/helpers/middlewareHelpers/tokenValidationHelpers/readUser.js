@@ -6,7 +6,7 @@ function readUser (token) {
             throw new Error('❌ -Please provide a token to readUser')
         }
         const user = getUser(token)
-        console.log("user in readUser", user);  
+        // console.log("user in tokenValidationHelpers/readUser", user);  
         return {
             success: true,
             data: user

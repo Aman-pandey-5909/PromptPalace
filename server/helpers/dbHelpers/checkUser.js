@@ -1,27 +1,14 @@
 const User = require('../../models/User')
 // const {escapeMongoKey} = require('../../utils/escapeKeys')
-const checkUser = async (email) => {
+const checkUser = async (data) => {
     try {
-        if (!email) {
-            throw new Error('❌ -Please provide an emailto checkUser') 
+        if (!data) {
+            throw new Error('❌ -Please provide an data to checkUser') 
         }
-        email = email.toLowerCase()
-        // email = escapeMongoKey(email)
-        const user = await User.findOne({ email })
-        if (user) {
-            return {
-                success: true,
-                data: user
-            }
-        }
-        return {
-            success: false
-        }
+        return await User.exists(data)
     } catch (error) {
         console.error("❌-Error checking user | dbHelpers", error);
-        return {
-            success: false
-        }
+        return false
     }
 }
 

@@ -2,6 +2,7 @@ const { userDataCache } = require('../../utils/tempCache')
 
 const getUser = (token) => {
     const user = userDataCache.get(token)
+    // console.log(user);
     return {
         status: "success",
         data: user
