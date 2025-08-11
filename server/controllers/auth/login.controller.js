@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken')
 const { setUser, getAllUser } = require('../../helpers/cacheHelpers/userCache')
 const { setLogin, getAllLogin } = require('../../helpers/cacheHelpers/loginCache')
 const REGEXFORAUTH = require('../../utils/regexes')
-const getDataFromRequest = require('../../utils/getDataFromRequest')
-const checkUser = require('../../helpers/dbHelpers/checkUser')
+// const getDataFromRequest = require('../../utils/getDataFromRequest')
+const readUser = require('../../helpers/dbHelpers/readUser')
 const editUser = require('../../helpers/dbHelpers/editUser')
 /**
  * Handles user login.
@@ -19,8 +19,8 @@ const editUser = require('../../helpers/dbHelpers/editUser')
 
 exports.login = async (req, res) => {
     try {
-        const data = getDataFromRequest(req)
-        const { email, password } = data
+        // const data = getDataFromRequest(req)
+        const { email, password } = req.body
 
         if (!email || !password) {
             return res.status(400).json({ message: 'All fields are required' })
@@ -31,7 +31,7 @@ exports.login = async (req, res) => {
         }
 
         // read the user from database ( currently a json file ), reads and returns a buffer, if utf-8 is mentioned which is the encoding type so that it is read as text not buffer
-        const existingUser = await checkUser(email)
+        const existingUser = await readUser({ email })
 
         if (existingUser.success === false) {
             return res.status(400).json({ message: 'User does not exist' })
@@ -41,21 +41,20 @@ exports.login = async (req, res) => {
         if (!passwordMatch) {
             return res.status(400).json({ message: 'Invalid password' })
         }
-
-        const token = jwt.sign({ id: existingUser.data.id, email: existingUser.data.email, username: existingUser.data.username }, process.env.JWT_SECRET, { expiresIn: '1d' }) // create a token
+        // console.log("existingUser: ", existingUser);
+        const token = jwt.sign({ _id: existingUser.data._id, email: existingUser.data.email, username: existingUser.data.username }, process.env.JWT_SECRET, { expiresIn: '1d' }) // create a token
         setLogin(token, Date.now() + 24 * 60 * 60 * 1000) // cache the token with its value as expiration time
-        setUser(token, { id: existingUser.data.id, email: existingUser.data.email, username: existingUser.data.username })
-        await editUser(existingUser.data.id, { token }) // update the user with the new token, adds token key and assigns the token value
+        await editUser(existingUser.data._id, { token }) // update the user with the new token, adds token key and assigns the token value
+        setUser(token, existingUser.data)
+        res.cookie('userData', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }) // sets a userData cookie on the response whose maxAge is 24hrs, used as main cookie
 
-        res.cookie('userData', token, { httpOnly: true, secure:process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }) // sets a userData cookie on the response whose maxAge is 24hrs, used as main cookie
-
-        console.log("LoginTokens: ", getAllLogin());
-        console.log("UserTokens: ", getAllUser());
+        // console.log("LoginTokens: ", getAllLogin());
+        // console.log("UserTokens: ", getAllUser());
 
         return res.status(200).json({ message: 'User logged in successfully' })
 
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: 'Internal server error' , error: error.message})
+        return res.status(500).json({ message: 'Internal server error', error: error.message })
     }
 }
