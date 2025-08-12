@@ -6,8 +6,10 @@ export default function Home() {
   return (
     <div>
       <h1>Home</h1>
-      <Link href="/auth/login">Login</Link>
-      <Link href="/auth/signup">Signup</Link>
+      <div className="flex gap-3">
+      <Link className="border px-4 py-2" href="/auth/login">Login</Link>
+      <Link className="border px-4 py-2" href="/auth/signup">Signup</Link>
+      </div>
     </div>
   );
 }
