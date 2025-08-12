@@ -3,7 +3,7 @@ import WritePost from "@/components/dashboard/WritePost"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 
-const page = () => {
+const Write = () => {
   const router = useRouter()
   const onSubmit = async (data) => {
     try {
@@ -21,4 +21,4 @@ const page = () => {
     </div>
   )
 }
-export default page
+export default Write
