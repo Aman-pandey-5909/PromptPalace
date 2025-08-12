@@ -2,6 +2,7 @@
 import axios from "axios"
 import React, { useState } from "react"
 import PostCard from "./PostCard"
+import Link from "next/link"
 const Feed = () => {
   const [posts, setPosts] = useState([])
   const onClick = async () => {
@@ -15,7 +16,11 @@ const Feed = () => {
   return (
     <React.Fragment>
       <div>Feed</div>
-      <button onClick={onClick}>load</button>
+      <div className="flex flex-col gap-3">
+        <button className="border w-fit px-5 py-2" onClick={onClick}>load</button>
+        <Link className="border w-fit px-5 py-2" href="/dashboard">dashboard</Link>
+        {/* <Link className="border w-fit px-5 py-2" href="/dashboard/write">write</Link> */}
+      </div>
       <div>{posts.map(post => <PostCard key={post.id} post={post} />)}</div>
     </React.Fragment>
   )

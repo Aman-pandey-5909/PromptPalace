@@ -1,5 +1,6 @@
 const loginCache = new Map()
 const userDataCache = new Map()
+const postCache = new Map()
 
 setInterval(() => {
     const now = Date.now();
@@ -11,4 +12,4 @@ setInterval(() => {
     }
 }, 10 * 60 * 1000); 
 
-module.exports = { loginCache, userDataCache }
+module.exports = { loginCache, userDataCache, postCache }

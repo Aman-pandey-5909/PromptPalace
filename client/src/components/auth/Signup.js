@@ -100,20 +100,7 @@ const Signup = () => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="mobileno"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Mobile Number (optional)</FormLabel>
-                                    <FormControl>
-                                        <Input type="tel" placeholder="+91 0000000000" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
+                        
                         <FormField
                             control={form.control}
                             name="password"
