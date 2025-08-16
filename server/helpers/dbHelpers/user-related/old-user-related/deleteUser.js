@@ -9,7 +9,7 @@ const deleteUser = async(id) => {
         console.log("✅ - User deleted successfully | dbHelpers");
         return {
             success: true,
-            data: user
+            data: user 
         }
     } catch (error) {
         console.error("❌ - Error deleting user | dbHelpers", error);

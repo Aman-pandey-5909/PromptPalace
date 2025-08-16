@@ -1,5 +1,5 @@
-const User = require('../../models/User')
-const { setUser } = require('../cacheHelpers/userCache')
+const User = require('../../../../models/User')
+const { setUser } = require('../../../cacheHelpers/userCache')
 // const {escapeMongoKeys} = require('../../utils/escapeKeys')
 const editUser = async(id, data) => {
     try {
@@ -16,7 +16,7 @@ const editUser = async(id, data) => {
         return {
             success: true,
             data: user
-        }
+        } 
     } catch (error) {
         console.error("❌ - Error editing user | dbHelpers", error);
         return {

@@ -27,6 +27,7 @@ exports.postprompt = async(req, res) => {
                 }
 
                 await Post.create({ author: decoded._id,title, description, prompt, tags: arrTags })
+                
                 // console.log(arrTags);
                 return res.status(200).json({message: 'Prompt added'})
         } catch (error) {

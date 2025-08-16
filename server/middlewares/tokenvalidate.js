@@ -12,13 +12,14 @@ async function tokenvalidation (req, res, next) {
             throw new Error('❌ - Please provide a token to tokenvalidation | Authorization Failed')
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        
         const refreshtoken  = refreshToken(res, token)
         if (!refreshtoken.status) {
             throw new Error(`❌ - ${refreshtoken.message} | Authorization Failed`)
         }
         const user = readUser(token)
-        if (!user.success) {
-            throw new Error(`❌ - ${user.error} | Authorization Failed`)
+        if (!user) {
+            throw new Error(`❌ - user: ${user} | Authorization Failed`)
         }
         
         const decodedData = {
@@ -28,16 +29,17 @@ async function tokenvalidation (req, res, next) {
         }
         // console.log("User data in tokenvalidate:", user.data.data);
         // console.log("Decoded data in tokenvalidate:", decodedData);
-        console.log("User _id from userdata in tokenvalidate:", user.data.data._id.toString());
-        if (user.data.data.email !== decodedData.email || user.data.data.username !== decodedData.username || user.data.data._id.toString() !== decodedData._id) {
+        console.log("User _id from userdata in tokenvalidate:", user._id.toString());
+        if (user.email !== decodedData.email || user.username !== decodedData.username || user._id.toString() !== decodedData._id) {
             throw new Error('❌ - User does not match token | Authorization Failed')
         }
-        req.user = user.data.data
+        req.user = user
         next()
     } catch (error) {
+        res.clearCookie('userData')
         console.error("❌ - Error validating token | tokenvalidation", error);
         res.status(401).json({ message: 'Unauthorized | Authorization Failed' });
     }
 }
 
-module.exports = tokenvalidation
+module.exports = tokenvalidation 

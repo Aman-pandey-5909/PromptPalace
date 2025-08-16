@@ -1,7 +1,7 @@
-const { setUser } = require('../../helpers/cacheHelpers/userCache')
-const editUser = require('../../helpers/dbHelpers/editUser')
+const { setUser } = require('../../helpers/cacheHelpers/userCache2')
+const { editUser, checkUser } = require('../../helpers/dbHelpers/user-related/userHelper')
 const jwt = require('jsonwebtoken')
-const checkUser = require('../../helpers/dbHelpers/checkUser')
+// const checkUser = require('../../helpers/dbHelpers/user-related/checkUser')
 
 exports.updatedetails = async (req, res) => {
     try {
@@ -18,7 +18,7 @@ exports.updatedetails = async (req, res) => {
 
         // problem faced: problem in token validation, cuz we matching data from cache and data from cookie together, so gotta update it but we keep mobile here in cache userdata, so it becomes unequal hence throws error and logs out user in frontend or do something about it
 
-        const user = await editUser(decodedToken._id, { mobile: mobileno })
+        const user = await editUser("_id", decodedToken._id, { mobile: mobileno })
         // const updatedData = {
         //     id: user.data.id,
         //     email: user.data.email,
@@ -26,7 +26,7 @@ exports.updatedetails = async (req, res) => {
         //     mobile: user.data.mobile 
         // } 
         // console.log(updatedData);
-        setUser(token, user.data)
+        setUser(token, user)
         return res.status(200).json({ message: 'User details updated' })
     } catch (error) {
         console.error(error);  

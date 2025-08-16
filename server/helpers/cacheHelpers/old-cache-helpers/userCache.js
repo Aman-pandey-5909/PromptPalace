@@ -1,4 +1,4 @@
-const { userDataCache } = require('../../utils/tempCache')
+const { userDataCache } = require('../../../utils/tempCache')
 
 const getUser = (token) => {
     const user = userDataCache.get(token)
@@ -6,8 +6,8 @@ const getUser = (token) => {
     return {
         status: "success",
         data: user
-    }
-}
+    } 
+} 
 
 const delUser = (token) => {
     userDataCache.delete(token)

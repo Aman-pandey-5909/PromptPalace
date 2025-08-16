@@ -1,4 +1,4 @@
-const {getUser} = require('../../helpers/cacheHelpers/userCache')
+const {getUser} = require('../../helpers/cacheHelpers/userCache2')
 
 exports.details = async (req, res) => {
     try {
@@ -6,7 +6,7 @@ exports.details = async (req, res) => {
         // console.log(usercookietoken);
         const user = getUser(usercookietoken)
         // console.log(user);
-        return res.status(200).json({message: 'User details fetched', data: user.data})
+        return res.status(200).json({message: 'User details fetched', data: user})
     } catch (error) {
         console.error(error);  
         return res.status(500).json({message: 'Internal server error'})

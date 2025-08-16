@@ -1,7 +1,7 @@
-const User = require('../../models/User')
+const User = require('../../../../models/User')
 // const {escapeMongoKey} = require('../../utils/escapeKeys')
 const checkUser = async (data) => {
-    try {
+    try { 
         if (!data) {
             throw new Error('❌ -Please provide an data to checkUser') 
         }

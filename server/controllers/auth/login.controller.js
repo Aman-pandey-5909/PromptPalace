@@ -1,11 +1,14 @@
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { setUser, getAllUser } = require('../../helpers/cacheHelpers/userCache')
-const { setLogin, getAllLogin } = require('../../helpers/cacheHelpers/loginCache')
+// const { setUser, getAllUser } = require('../../helpers/cacheHelpers/userCache')
+const { setUser, getAllUser } = require('../../helpers/cacheHelpers/userCache2')
+const { setLogin, getAllLogin } = require('../../helpers/cacheHelpers/loginCache2')
 const REGEXFORAUTH = require('../../utils/regexes')
 // const getDataFromRequest = require('../../utils/getDataFromRequest')
-const readUser = require('../../helpers/dbHelpers/readUser')
-const editUser = require('../../helpers/dbHelpers/editUser')
+// const readUser = require('../../helpers/dbHelpers/user-related/readUser')
+// const editUser = require('../../helpers/dbHelpers/user-related/editUser')
+const {readUser, editUser} = require('../../helpers/dbHelpers/user-related/userHelper')
+
 /**
  * Handles user login.
  * Validates user credentials, generates a JWT token on successful authentication,
@@ -21,7 +24,7 @@ exports.login = async (req, res) => {
     try {
         // const data = getDataFromRequest(req)
         const { email, password } = req.body
-
+        console.log(`email: ${email}, password: ${password}`)
         if (!email || !password) {
             return res.status(400).json({ message: 'All fields are required' })
         }
@@ -33,19 +36,19 @@ exports.login = async (req, res) => {
         // read the user from database ( currently a json file ), reads and returns a buffer, if utf-8 is mentioned which is the encoding type so that it is read as text not buffer
         const existingUser = await readUser({ email })
 
-        if (existingUser.success === false) {
+        if (!existingUser) {
             return res.status(400).json({ message: 'User does not exist' })
         }
 
-        const passwordMatch = await bcryptjs.compare(password, existingUser.data.password)
+        const passwordMatch = await bcryptjs.compare(password, existingUser.password)
         if (!passwordMatch) {
             return res.status(400).json({ message: 'Invalid password' })
         }
         // console.log("existingUser: ", existingUser);
-        const token = jwt.sign({ _id: existingUser.data._id, email: existingUser.data.email, username: existingUser.data.username }, process.env.JWT_SECRET, { expiresIn: '1d' }) // create a token
+        const token = jwt.sign({ _id: existingUser._id, email: existingUser.email, username: existingUser.username }, process.env.JWT_SECRET, { expiresIn: '1d' }) // create a token
         setLogin(token, Date.now() + 24 * 60 * 60 * 1000) // cache the token with its value as expiration time
-        await editUser(existingUser.data._id, { token }) // update the user with the new token, adds token key and assigns the token value
-        setUser(token, existingUser.data)
+        await editUser("_id", existingUser._id, { token }) // update the user with the new token, adds token key and assigns the token value
+        setUser(token, existingUser)
         res.cookie('userData', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }) // sets a userData cookie on the response whose maxAge is 24hrs, used as main cookie
 
         // console.log("LoginTokens: ", getAllLogin());
