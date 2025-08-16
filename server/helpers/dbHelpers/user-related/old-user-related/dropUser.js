@@ -1,4 +1,4 @@
-const User = require('../../models/User')
+const User = require('../../../../models/User')
 
 const dropUser = async() => {
     try {
@@ -9,7 +9,7 @@ const dropUser = async() => {
         }
     } catch (error) {
         console.error("❌ - Error dropping user | dbHelpers", error);
-        return {
+        return { 
             success: false,
             error: error.message
         }

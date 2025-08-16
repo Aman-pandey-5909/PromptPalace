@@ -1,4 +1,4 @@
-const User = require('../../models/User')
+const User = require('../../../../models/User')
 
 const readUser = async(data) => {
     try {
@@ -7,7 +7,7 @@ const readUser = async(data) => {
         }
         const user = await User.findOne(data)
         if (!user) {
-            return {
+            return { 
                 success: false,
                 error: "User not found"
             }

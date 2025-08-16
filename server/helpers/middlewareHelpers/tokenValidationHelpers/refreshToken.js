@@ -1,4 +1,4 @@
-const {setLogin, hasLogin} = require('../../cacheHelpers/loginCache')
+const {setLogin, hasLogin} = require('../../cacheHelpers/loginCache2')
 const setCookie = require('./setCookie')
 const readUser = require('./readUser')
 const jwt = require('jsonwebtoken')
@@ -37,9 +37,9 @@ function refreshToken (res, token) {
         } else {
             const user = readUser(token)
             if(
-                user.data.data.email !== decodedData.email ||
-                user.data.data.username !== decodedData.username ||
-                user.data.data._id.toString() !== decodedData._id
+                user.email !== decodedData.email ||
+                user.username !== decodedData.username ||
+                user._id.toString() !== decodedData._id
             ) {
                 res.clearCookie('userData')
                 throw new Error('❌ - User does not match token | refreshToken')

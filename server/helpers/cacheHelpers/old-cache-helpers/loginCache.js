@@ -1,4 +1,5 @@
-const { loginCache } = require("../../utils/tempCache");
+const { loginCache } = require("../../../utils/tempCache");
+
 
 const delLogin = (token) => {
     loginCache.delete(token);
@@ -32,11 +33,11 @@ const hasLogin = (token) => {
 const getAllLogin = () => {
     return [...loginCache.entries()]
 }
-
+  
 module.exports = {
-    setLogin,
+    setLogin, 
     getLogin,
-    delLogin,
+    delLogin, 
     hasLogin,
     getAllLogin
 }

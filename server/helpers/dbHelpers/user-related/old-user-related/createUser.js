@@ -1,10 +1,10 @@
-const User = require('../../models/User')
+const User = require('../../../../models/User')
 // const {escapeMongoKeys} = require('../../utils/escapeKeys')
 const createUser = async(data) => {
     try {
         if (!data) {
             throw new Error('❌ -Please provide data to createUser')
-        }
+        } 
         // const escapedData = escapeMongoKeys(data)
         const user = await User.create(data)
         console.log("✅ - User created successfully | dbHelpers");
