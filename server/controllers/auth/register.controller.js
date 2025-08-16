@@ -3,8 +3,10 @@ const bcryptjs = require('bcryptjs')
 // const path = require('path')
 const REGEXFORAUTH = require('../../utils/regexes')
 // const getDataFromRequest = require('../../utils/getDataFromRequest')
-const checkUser = require('../../helpers/dbHelpers/checkUser')
-const createUser = require('../../helpers/dbHelpers/createUser')
+// const checkUser = require('../../helpers/dbHelpers/user-related/checkUser')
+// const createUser = require('../../helpers/dbHelpers/user-related/createUser')
+const {checkUser, createUser} = require('../../helpers/dbHelpers/user-related/userHelper')
+
 exports.register = async (req, res) => {
     try {
 
@@ -44,8 +46,8 @@ exports.register = async (req, res) => {
         }
 
         const saveUser = await createUser(newUserData)
-        if (!saveUser.success) {
-            return res.status(400).json({ message: 'User registration failed', error: saveUser.error })
+        if (!saveUser) {
+            return res.status(400).json({ message: 'User registration failed'})
         }
         return res.status(200).json({ message: 'User registered successfully', data: saveUser })
 
