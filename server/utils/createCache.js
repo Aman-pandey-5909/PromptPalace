@@ -6,42 +6,42 @@ const createCache = (cacheName) => {
             const currentTime = Date.now()
             for(const [key, { ttl }] of store.entries()) {
                 if (currentTime > ttl) {
-                     store.delete(key)
-                    console.log(`Expired ${key} in ${cacheName}`)
+                     store.delete(key.toString())
+                    console.log(`Expired ${key.toString()} in ${cacheName}`)
                 }
             }
         }, 60 * 1000);
         return {
             cacheName,
-            async has(key) {
-                return store.has(key)
+            has(key) {
+                return store.has(key.toString())
             },
 
-            async get(key) {
-                if (!store.has(key)) return null
-                const { data, ttl } = store.get(key)
+            get(key) {
+                if (!store.has(key.toString())) return null
+                const { data, ttl } = store.get(key.toString())
                 if (Date.now() > ttl) {
-                    store.delete(key)
+                    store.delete(key.toString())
                     return null
                 }
                 return data
             },
-            async set(key, { value, ttl }) {
-                store.set(key, { data: value, ttl: Date.now() + ttl })
+            set(key, { value, ttl }) {
+                store.set(key.toString(), { data: value, ttl: Date.now() + ttl })
                 return value
             },
-            async delete(key) {
-                if (!store.has(key)) return null
-                store.delete(key)
+            delete(key) {
+                if (!store.has(key.toString())) return null
+                store.delete(key.toString())
             },
-            async clear() {
+            clear() {
                 console.warn(`Clearing ${cacheName}`);
                 store.clear()
             },
-            async size() {
+            size() {
                 return store.size
             },
-            async getAll() {
+            getAll() {
                 return [...store]
             }
         }

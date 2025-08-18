@@ -1,4 +1,6 @@
 const { setUser } = require('../../helpers/cacheHelpers/userCache2')
+const {usercache} = require('../../utils/createCache')
+ 
 const { editUser, checkUser } = require('../../helpers/dbHelpers/user-related/userHelper')
 const jwt = require('jsonwebtoken')
 // const checkUser = require('../../helpers/dbHelpers/user-related/checkUser')
@@ -26,7 +28,12 @@ exports.updatedetails = async (req, res) => {
         //     mobile: user.data.mobile 
         // } 
         // console.log(updatedData);
-        setUser(token, user)
+
+        // setUser(token, user)
+        // console.log(`decodedToken id in updatedetails before set: `, decodedToken._id);
+        usercache.set(decodedToken._id, { value: user, ttl: 24 * 60 * 60 * 1000 })
+        // console.log(`usercache in updateDetails Controller: ${JSON.stringify(usercache.getAll(), null, 2)}`);
+
         return res.status(200).json({ message: 'User details updated' })
     } catch (error) {
         console.error(error);  

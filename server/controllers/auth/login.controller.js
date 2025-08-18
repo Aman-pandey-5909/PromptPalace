@@ -1,9 +1,10 @@
 const bcryptjs = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken') 
 // const { setUser, getAllUser } = require('../../helpers/cacheHelpers/userCache')
 const { setUser, getAllUser } = require('../../helpers/cacheHelpers/userCache2')
 const { setLogin, getAllLogin } = require('../../helpers/cacheHelpers/loginCache2')
-const REGEXFORAUTH = require('../../utils/regexes')
+const {logincache, usercache} = require('../../utils/createCache')
+const REGEXFORAUTH = require('../../utils/regexes') 
 // const getDataFromRequest = require('../../utils/getDataFromRequest')
 // const readUser = require('../../helpers/dbHelpers/user-related/readUser')
 // const editUser = require('../../helpers/dbHelpers/user-related/editUser')
@@ -46,10 +47,22 @@ exports.login = async (req, res) => {
         }
         // console.log("existingUser: ", existingUser);
         const token = jwt.sign({ _id: existingUser._id, email: existingUser.email, username: existingUser.username }, process.env.JWT_SECRET, { expiresIn: '1d' }) // create a token
-        setLogin(token, Date.now() + 24 * 60 * 60 * 1000) // cache the token with its value as expiration time
+
+
+        // setLogin(token, Date.now() + 24 * 60 * 60 * 1000) // cache the token with its value as expiration time
+        logincache.set(existingUser._id, { value: token, ttl: 24 * 60 * 60 * 1000 })
+
+
         await editUser("_id", existingUser._id, { token }) // update the user with the new token, adds token key and assigns the token value
-        setUser(token, existingUser)
+
+
+        // setUser(token, existingUser)
+        usercache.set(existingUser._id, {value: existingUser, ttl: 24 * 60 * 60 * 1000})
+        // console.log(`Existing user id in loginController after set: `, existingUser._id);
+
         res.cookie('userData', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: 24 * 60 * 60 * 1000 }) // sets a userData cookie on the response whose maxAge is 24hrs, used as main cookie
+
+        // console.log(`usercache in Login Controller: ${JSON.stringify(usercache.getAll(), null, 2)}`);
 
         // console.log("LoginTokens: ", getAllLogin());
         // console.log("UserTokens: ", getAllUser());
