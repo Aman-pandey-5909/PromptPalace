@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { posts } = require('../../controllers/index')
+const { feed } = require('../../controllers/index')
 
-router.get('/posts', posts)
+router.get('/feed', feed)
 
 module.exports = router
