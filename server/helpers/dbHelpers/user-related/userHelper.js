@@ -1,5 +1,4 @@
 const User = require('../../../models/User')
-const { setUser } = require('../../cacheHelpers/userCache2')
 const { usercache } = require('../../../utils/createCache')
 
 
@@ -14,7 +13,6 @@ module.exports = {
         // console.log(`user._id in editUser before set: `, user._id);
         usercache.set(user._id, { value: user, ttl: 24 * 60 * 60 * 1000 })
         // console.log(`usercache in userHelper : ${JSON.stringify(usercache.getAll(), null, 2)}`);
-
 
         return user
     },

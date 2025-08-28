@@ -20,7 +20,7 @@ export default function GetUser ({children}) {
             }
         }
         getUser()
-    }, [ pathname ])
+    }, [pathname])
 
     return (
         <GetUserContext.Provider value={{userData, setUserData}}>

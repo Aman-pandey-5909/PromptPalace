@@ -1,12 +1,13 @@
 const { setUser } = require('../../helpers/cacheHelpers/userCache2')
 const {usercache} = require('../../utils/createCache')
- 
+const asyncHandler = require('../../utils/asyncHandler')
+
 const { editUser, checkUser } = require('../../helpers/dbHelpers/user-related/userHelper')
 const jwt = require('jsonwebtoken')
 // const checkUser = require('../../helpers/dbHelpers/user-related/checkUser')
 
-exports.updatedetails = async (req, res) => {
-    try {
+exports.updatedetails = asyncHandler( async (req, res) => {
+    
         const mobileno = req.body.mobileno
         const token = req.cookies.userData
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
@@ -35,8 +36,5 @@ exports.updatedetails = async (req, res) => {
         // console.log(`usercache in updateDetails Controller: ${JSON.stringify(usercache.getAll(), null, 2)}`);
 
         return res.status(200).json({ message: 'User details updated' })
-    } catch (error) {
-        console.error(error);  
-        return res.status(500).json({ message: 'Internal server error' })
-    }
-}
+    
+} )
