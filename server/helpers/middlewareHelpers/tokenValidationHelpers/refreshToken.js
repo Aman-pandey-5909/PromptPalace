@@ -1,4 +1,3 @@
-const { setLogin, hasLogin } = require('../../cacheHelpers/loginCache2')
 const { logincache, usercache } = require('../../../utils/createCache')
 
 const setCookie = require('./setCookie')

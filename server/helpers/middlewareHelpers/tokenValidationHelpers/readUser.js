@@ -1,5 +1,4 @@
 // const { getUser } = require('../../cacheHelpers/userCache')
-const { getUser } = require('../../cacheHelpers/userCache2')
 const {usercache} = require('../../../utils/createCache')
 
 function readUser (userid) {
