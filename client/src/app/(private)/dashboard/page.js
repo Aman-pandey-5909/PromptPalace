@@ -2,10 +2,10 @@
 import Dashboard from "@/components/dashboard/Dashboard"
 import React, {useState, useEffect, useContext} from "react"
 import axios from "axios"
-import { GetUserContext } from "../../context/getUser";
+import { GetUserContext } from "@/context/getUser";
 
 
-const page = () => {
+const DashboardPage = () => {
   const { userData, setUserData } = useContext(GetUserContext);
   const [userPost, setUserPost] = useState([]);
   useEffect(() => {
@@ -22,8 +22,8 @@ const page = () => {
   }, []);
   return (
     <React.Fragment>
-      <Dashboard userPost={userPost}/>
+      <Dashboard userPost={userPost} selfDashboard={true}/>
     </React.Fragment>
   )
 }
-export default page
+export default DashboardPage

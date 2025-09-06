@@ -1,10 +1,10 @@
 import Signup from "@/components/auth/Signup"
 
-const signup = () => {
+const SignUpPage = () => {
   return (
     <div>
         <Signup />
     </div>
   )
 }
-export default signup
+export default SignUpPage

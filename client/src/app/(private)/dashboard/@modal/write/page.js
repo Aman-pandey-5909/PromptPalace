@@ -14,10 +14,15 @@ const Write = () => {
       console.log(error)
     }
   }
+
+  const onBack = () => {
+    router.back()
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-      <WritePost onSubmit={onSubmit} />
-      <button onClick={() => router.back()}>Back</button>
+      <WritePost onBack={onBack} onSubmit={onSubmit} />
+      {/* <button onClick={() => router.back()}>Back</button> */}
     </div>
   )
 }

@@ -1,10 +1,10 @@
 import Login from "@/components/auth/Login"
 
-const login = () => {
+const LoginPage = () => {
   return (
     <div className="">
       <Login />
     </div>
   )
 }
-export default login
+export default LoginPage

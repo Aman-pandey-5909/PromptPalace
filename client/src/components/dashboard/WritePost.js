@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 
-export default function WritePost({ onSubmit }) {
+export default function WritePost({ onSubmit, onBack }) {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -69,6 +69,7 @@ export default function WritePost({ onSubmit }) {
           Clear
         </Button>
         <Button type="submit">Post</Button>
+        <Button onClick={onBack} variant="outline">Back</Button>
       </div>
     </form>
   )

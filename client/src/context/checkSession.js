@@ -3,6 +3,8 @@ import { checkRouteRestriction } from "@/utils/checkRouteRestriction";
 import { createContext, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/feed/app-sidebar";
 
 export const CheckSessionContext = createContext();
 
@@ -22,10 +24,11 @@ const CheckSession = ({ children }) => {
             console.log("res", res); // unreachable once logged in
             if (!res) { // unreachable once logged in
                 console.log("session checked | false");
-                if(excludedRoutes.includes(pathname)) {
+                if (excludedRoutes.includes(pathname)) {
                     setLoading(false)
                     return
                 }
+                setLoading(false)
                 router.push('/auth/login')
                 return
             } else {
@@ -49,7 +52,16 @@ const CheckSession = ({ children }) => {
                     <Skeleton className="h-4 w-[250px]" />
                     <Skeleton className="h-4 w-[200px]" />
                 </div>
-            </div> : children}
+            </div>
+                :
+                // (authorized ? <SidebarProvider >
+                //     <AppSidebar />
+                //     <main className="w-full px-2">
+                //         <SidebarTrigger className={"fixed top-0"}/>
+                //         {children}
+                //     </main>
+                // </SidebarProvider> : 
+                children}
         </CheckSessionContext.Provider>
     )
 }
