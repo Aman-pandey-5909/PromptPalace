@@ -16,6 +16,10 @@ const postSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    authorName: {
+        type: String,
+        required: true,
+    },
     title: {
         type: String,
         required: true,
@@ -43,6 +47,9 @@ const postSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+postSchema.index({ authorName: 'text', title: 'text', description: 'text', prompt: 'text', tags: 'text' },
+    { weights: { authorName: 10, title: 5, prompt: 5, tags: 5, description: 1 } });
 
 const Post = mongoose.model('Post', postSchema);
 
