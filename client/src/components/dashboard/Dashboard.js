@@ -47,24 +47,9 @@ import {
 
 
 
-const Dashboard = ({ userPost, selfDashboard = false }) => {
-  const { userData, setUserData } = useContext(GetUserContext);
+const Dashboard = ({ userPost, selfDashboard = false, logout, onMobileLinked, userData }) => {
   const [showMobileNo, setShowMobileNo] = useState(false);
   const router = useRouter();
-  const onMobileLinked = (mobile) => {
-    // update context gently
-    setUserData && setUserData((prev) => ({ ...prev, mobile }));
-    setShowMobileNo(false);
-  };
-
-  const logout = async () => {
-    try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_LINK_AUTH}/logout`, {}, { withCredentials: true })
-      router.push("/auth/login")
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background/60 via-background to-slate-50 py-12">
@@ -244,8 +229,18 @@ const Dashboard = ({ userPost, selfDashboard = false }) => {
             </div>
           </Card>) : (
           <Card className={"max-w-4xl mx-auto gap-0 px-4 text-xl my-5 max-h-[80vh] overflow-auto"}>
-            <div>Seems like you have not created any posts yet!&nbsp;
-              <Button className={"p-0 text-xl underline"} variant={"ghost"} onClick={() => router.push("/dashboard/write")}>Create Posts</Button>
+
+            <div>
+              {selfDashboard ? (
+                <>
+                  Seems like you have not created any posts yet!&nbsp;
+                  <Button className={"p-0 text-xl underline"} variant={"ghost"} onClick={() => router.push("/dashboard/write")}>Create Posts</Button>
+                </>
+              ): (
+                <>
+                  {userData?.username} has not created any posts yet!
+                </>
+              )}
             </div>
           </Card>
         )

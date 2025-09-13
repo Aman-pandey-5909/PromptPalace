@@ -47,7 +47,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader className={'flex-row justify-center-safe'}>
-        <Image src={"/icon.png"} alt="PromptPalace" width={32} height={32}/>
+        <Image src={"/icon.png"} alt="PromptPalace" width={32} height={32} />
         <SidebarGroupLabel className={'transition-none text-md'}>PromptPalace</SidebarGroupLabel>
       </SidebarHeader>
       <SidebarContent>
@@ -73,7 +73,9 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <span>&copy; {new Date().getFullYear()} PromptPalace</span>
+                <SidebarMenuButton asChild>
+                  <span>&copy; {new Date().getFullYear()} PromptPalace</span>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>

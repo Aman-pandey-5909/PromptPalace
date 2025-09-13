@@ -30,11 +30,11 @@ import SearchNav from "./search-nav";
 // export default Feed
 
 
-const Feed = ({post}) => {
+const Feed = ({post, onClickSearch}) => {
   return (
     <div>
-      <SearchNav />
-      {post.length === 0 || !post ? <h1>Loading...</h1> : null}
+      <SearchNav onClickSearch={onClickSearch}/>
+      {post.length === 0 || !post ? <h1>Post not found</h1> : null}
       {post.map(post => <PostCard key={post._id} post={post} />)}
     </div>
   )
