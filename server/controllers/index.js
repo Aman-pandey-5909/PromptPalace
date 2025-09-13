@@ -7,5 +7,7 @@ module.exports = {
     ...require('./user/details.controller'),
     ...require('./user/updatedetails.controller'),
     ...require('./posts/postprompt.controller'),
-    ...require('./user/userposts.controller') 
+    ...require('./user/userposts.controller'),
+    ...require('./search/searchuser.controller'),
+    ...require('./search/searchdata.controller')
 }

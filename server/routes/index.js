@@ -11,6 +11,8 @@ const detailsRoute = require('./user/details.route')
 const updateDetailRoute = require('./user/updatedetails.route')
 const postPromptRoute = require('./posts/postprompt.route')
 const userPost = require('./user/userposts.route')
+const searchData = require('./search/searchdata.route')
+const searchUser = require('./search/searchuser.route')
 
 //AUTH ROUTES
 router.use('/auth', loginRoute)
@@ -26,6 +28,7 @@ router.use(detailsRoute)
 router.use(updateDetailRoute)
 router.use(postPromptRoute)
 router.use(userPost)
-
+router.use(searchData)
+router.use(searchUser)
 
 module.exports = router

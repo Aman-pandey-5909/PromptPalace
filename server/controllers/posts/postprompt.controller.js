@@ -31,6 +31,7 @@ exports.postprompt = asyncHandler(async (req, res) => {
 
         const postObj = {
                 author: decoded._id,
+                authorName: decoded.username,
                 title,
                 description,
                 prompt,
