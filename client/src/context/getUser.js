@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 
 export const GetUserContext = createContext();
 
+// instead of running once on every path change, make it so that it runs intially once, and then goes into sleep for a time frame (3-4min) and then become savailable, and any action(scroll, click, path change, etc) in frotnend runs it again, to stay updated
+
 export default function GetUser ({children}) {
     const [userData, setUserData] = useState({});
     const pathname = usePathname()

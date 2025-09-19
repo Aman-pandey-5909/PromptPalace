@@ -8,7 +8,6 @@ const Write = () => {
   const onSubmit = async (data) => {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_LINK}/postprompt`, data, { withCredentials: true })
-      console.log(res)
       router.back()
     } catch (error) {
       console.log(error)

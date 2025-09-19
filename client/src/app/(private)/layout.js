@@ -7,13 +7,9 @@ export default function PrivateLayout({ children }) {
     return (
         <GetUser>
             <SearchBarProvider>
-                <SidebarProvider >
-                    <AppSidebar />
-                    <main className="w-full px-2">
-                        <SidebarTrigger className={"fixed top-0 z-10"} />
-                        {children}
-                    </main>
-                </SidebarProvider>
+                <main className="w-full px-2">
+                    {children}
+                </main>
             </SearchBarProvider>
         </GetUser>
     )

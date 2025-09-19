@@ -10,9 +10,12 @@ export const CheckSessionContext = createContext();
 
 const CheckSession = ({ children }) => {
     const [loading, setLoading] = useState(true)
+    const [authorized, setAuthorized] = useState(false)
     const router = useRouter()
     const pathname = usePathname()
     const excludedRoutes = ['/auth/login', '/auth/signup', '/']
+    const publicRoutes = ['/user']
+    const authRoutes = ['/auth/login', '/auth/signup']
     useEffect(() => {
         async function checkRoute() {
             // if (excludedRoutes.includes(pathname)) {
@@ -24,10 +27,11 @@ const CheckSession = ({ children }) => {
             console.log("res", res); // unreachable once logged in
             if (!res) { // unreachable once logged in
                 console.log("session checked | false");
-                if (excludedRoutes.includes(pathname)) {
+                if (excludedRoutes.includes(pathname) || publicRoutes.includes(pathname)) {
                     setLoading(false)
                     return
                 }
+                setAuthorized(false)
                 setLoading(false)
                 router.push('/auth/login')
                 return
@@ -36,6 +40,7 @@ const CheckSession = ({ children }) => {
                 if (excludedRoutes.includes(pathname)) {
                     router.push('/feed')
                 }
+                setAuthorized(true)
                 setLoading(false)
                 return
             }
@@ -54,14 +59,14 @@ const CheckSession = ({ children }) => {
                 </div>
             </div>
                 :
-                // (authorized ? <SidebarProvider >
-                //     <AppSidebar />
-                //     <main className="w-full px-2">
-                //         <SidebarTrigger className={"fixed top-0"}/>
-                //         {children}
-                //     </main>
-                // </SidebarProvider> : 
-                children}
+                (authorized && !publicRoutes.includes(pathname) ? <SidebarProvider >
+                    <AppSidebar />
+                    <main className="w-full px-2">
+                        <SidebarTrigger className={"fixed top-0 z-10"} />
+                        {children}
+                    </main>
+                </SidebarProvider> :
+                    children)}
         </CheckSessionContext.Provider>
     )
 }
